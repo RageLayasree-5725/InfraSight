@@ -1,27 +1,34 @@
 # InfraSight
 
-## AI-Based Road Damage Detection
+## AI-Based Road Damage Detection & Inspection
 
-InfraSight is a computer-vision prototype that detects road damage
-from images using a trained YOLO model and produces visual
-bounding-box evidence for detected defects.
+InfraSight is a computer-vision prototype that detects visible road damage from road images using a trained YOLO model and produces visual detection evidence.
 
 ## Problem
 
-Manual road inspection is time-consuming and difficult to scale.
-InfraSight provides an automated first-level inspection from road images.
+Manual road inspection is time-consuming and difficult to scale. InfraSight aims to support faster first-level road inspection by automatically identifying visible road defects from imagery.
 
-## Current Working Features
+## Current Working Prototype
 
-- Road-damage image upload
-- AI inference using trained YOLO model
-- Bounding-box visualization
+The submitted prototype currently demonstrates:
+
+- Road image input
+- AI-based road damage detection
 - Damage-class prediction
 - Confidence score
-- Example test images
-- Reproducible local inference
+- Bounding-box visualization
+- Generated detection output
+- Local application/API for inference
 
-## Supported Damage Classes
+## AI Model
+
+Model: YOLO-based object detection
+
+Trained model:
+
+`model/best.pt`
+
+### Damage Classes
 
 - D00 — Longitudinal crack
 - D10 — Transverse crack
@@ -29,55 +36,30 @@ InfraSight provides an automated first-level inspection from road images.
 - D40 — Pothole
 - D50 — Other damage
 
-## Architecture
+## System Flow
 
-Image
-  ↓
-YOLO model
-  ↓
-Object detection
-  ↓
-Class + confidence + bounding box
-  ↓
-Visual result
+Road Image
+↓
+YOLO Detection
+↓
+Damage Class + Confidence
+↓
+Bounding Box
+↓
+Detection Result
 
-## How to Run
+## Repository Structure
 
-### Install dependencies
-
-pip install -r requirements.txt
-
-### Run application
-
-python main.py
-
-Then open the displayed/local application URL.
-
-## Model
-
-The trained model is stored in:
-
-model/best.pt
-
-## Testing
-
-Test images and detection outputs are available in:
-
-examples/
-results/
-
-See results/test_report.md for the measured results.
-
-## Limitations
-
-The current prototype is an image-based detection system.
-Detection accuracy depends on image quality, viewpoint,
-lighting and the training data distribution.
-
-## Future Scope
-
-- Larger and more diverse road dataset
-- Improved confidence calibration
-- Temporal persistence across repeated inspections
-- Automated maintenance prioritization
-- Deployment on drone/edge hardware
+```text
+InfraSight/
+├── README.md
+├── main.py
+├── requirements.txt
+├── index.html
+├── camera.html
+│
+├── model/
+│   └── best.pt
+│
+└── results/
+    └── test_report.md
