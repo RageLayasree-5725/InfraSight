@@ -1,0 +1,2310 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>InfraSight | Road Infrastructure Intelligence</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fa;
+            color: #172033;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #172033,
+                #26364d
+            );
+
+            color: white;
+            padding: 28px 5%;
+        }
+
+        .header-content {
+            max-width: 1250px;
+            margin: auto;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .brand p {
+            margin: 7px 0 0;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 9px 14px;
+
+            border-radius: 20px;
+
+            background: rgba(255,255,255,0.1);
+
+            font-size: 13px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+
+            box-shadow:
+                0 0 10px
+                rgba(34,197,94,0.8);
+        }
+
+        /* ==============================
+           MAIN
+        ============================== */
+
+        .container {
+            width: 92%;
+            max-width: 1250px;
+            margin: 28px auto;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            margin-bottom: 14px;
+
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        /* ==============================
+           PIPELINE
+        ============================== */
+
+        .pipeline {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 10px;
+        }
+
+        .pipeline-step {
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 15px
+                rgba(15,23,42,0.06);
+
+            position: relative;
+        }
+
+        .pipeline-step strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .pipeline-step span {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .pipeline-number {
+            width: 32px;
+            height: 32px;
+
+            margin: 0 auto 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #e0ecff;
+            color: #2563eb;
+
+            font-weight: bold;
+        }
+
+        /* ==============================
+           KPI CARDS
+        ============================== */
+
+        .kpi-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 16px;
+        }
+
+        .kpi {
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(15,23,42,0.06);
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 9px;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .kpi-sub {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .danger {
+            color: #dc2626;
+        }
+
+        .warning {
+            color: #d97706;
+        }
+
+        .success {
+            color: #16a34a;
+        }
+
+        .blue {
+            color: #2563eb;
+        }
+
+        /* ==============================
+           UPLOAD
+        ============================== */
+
+        .upload-card {
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(15,23,42,0.06);
+        }
+
+        .upload-area {
+            display: grid;
+
+            grid-template-columns:
+                1fr auto;
+
+            gap: 15px;
+
+            align-items: center;
+        }
+
+        .file-input {
+            width: 100%;
+
+            padding: 13px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            background: #f8fafc;
+        }
+
+        .detect-button {
+            padding: 13px 22px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .detect-button:hover {
+            background: #1d4ed8;
+        }
+
+        .detect-button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        #selectedFile {
+            margin-top: 10px;
+
+            font-size: 13px;
+
+            color: #64748b;
+        }
+
+        #uploadStatus {
+            margin-top: 12px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+        /* ==============================
+           TWO COLUMN
+        ============================== */
+
+        .two-column {
+            display: grid;
+
+            grid-template-columns:
+                1.2fr 0.8fr;
+
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(15,23,42,0.06);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+
+            margin-bottom: 16px;
+        }
+
+        /* ==============================
+           EVIDENCE IMAGE
+        ============================== */
+
+        .image-container {
+            width: 100%;
+
+            min-height: 300px;
+
+            background: #0f172a;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            overflow: hidden;
+        }
+
+        .detection-image {
+            width: 100%;
+            max-height: 500px;
+
+            object-fit: contain;
+
+            display: block;
+        }
+
+        .no-image {
+            color: #94a3b8;
+
+            text-align: center;
+
+            padding: 50px;
+        }
+
+        .evidence-caption {
+            margin-top: 12px;
+
+            font-size: 13px;
+
+            color: #64748b;
+        }
+
+        /* ==============================
+           LATEST DECISION
+        ============================== */
+
+        .decision-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 15px;
+        }
+
+        .defect-badge {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .decision-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 11px 0;
+
+            border-bottom:
+                1px solid #eef2f7;
+
+            font-size: 14px;
+        }
+
+        .decision-row:last-child {
+            border-bottom: none;
+        }
+
+        .decision-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .decision-value {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        /* ==============================
+           BADGES
+        ============================== */
+
+        .badge {
+            display: inline-block;
+
+            padding: 4px 9px;
+
+            border-radius: 15px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+        .badge-low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-critical {
+            background: #7f1d1d;
+            color: white;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        /* ==============================
+           PRIORITY PANEL
+        ============================== */
+
+        .priority-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+        }
+
+        .priority-card {
+            padding: 16px;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            border:
+                1px solid #e5e7eb;
+
+            background: #f8fafc;
+        }
+
+        .priority-number {
+            font-size: 26px;
+            font-weight: bold;
+
+            margin-top: 5px;
+        }
+
+        /* ==============================
+           TABLE
+        ============================== */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            font-size: 13px;
+        }
+
+        th {
+            text-align: left;
+
+            padding: 13px 10px;
+
+            background: #f8fafc;
+
+            color: #475569;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 13px 10px;
+
+            border-bottom:
+                1px solid #eef2f7;
+
+            white-space: nowrap;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* ==============================
+           ACTION BOX
+        ============================== */
+
+        .action-box {
+            margin-top: 18px;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            background: #eff6ff;
+
+            border:
+                1px solid #bfdbfe;
+        }
+
+        .action-title {
+            font-size: 12px;
+
+            color: #1e40af;
+
+            font-weight: bold;
+
+            margin-bottom: 6px;
+        }
+
+        .action-text {
+            font-size: 14px;
+
+            color: #1e3a8a;
+
+            font-weight: 600;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        footer {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 900px) {
+
+            .kpi-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .pipeline {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline {
+                grid-template-columns: 1fr;
+            }
+
+            .priority-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+    <div class="header-content">
+
+        <div class="brand">
+
+            <h1>
+                InfraSight
+            </h1>
+
+            <p>
+                AI Road Infrastructure Monitoring &amp; Deterioration Intelligence
+            </p>
+
+        </div>
+
+        <div class="system-status">
+
+            <span class="status-dot"></span>
+
+            <span id="systemStatus">
+                AI Engine Online
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- =========================================================
+     AI PIPELINE
+========================================================= -->
+
+<section class="section">
+
+    <div class="section-title">
+        AI Decision Pipeline
+    </div>
+
+    <div class="pipeline">
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                1
+            </div>
+
+            <strong>
+                Input
+            </strong>
+
+            <span>
+                Road image / inspection frame
+            </span>
+
+        </div>
+
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                2
+            </div>
+
+            <strong>
+                Detection
+            </strong>
+
+            <span>
+                YOLO road damage detection
+            </span>
+
+        </div>
+
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                3
+            </div>
+
+            <strong>
+                Assessment
+            </strong>
+
+            <span>
+                Severity &amp; confidence
+            </span>
+
+        </div>
+
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                4
+            </div>
+
+            <strong>
+                Temporal Logic
+            </strong>
+
+            <span>
+                Persistence &amp; deterioration
+            </span>
+
+        </div>
+
+
+        <div class="pipeline-step">
+
+            <div class="pipeline-number">
+                5
+            </div>
+
+            <strong>
+                Decision
+            </strong>
+
+            <span>
+                Priority &amp; action
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     KPI
+========================================================= -->
+
+<section class="section">
+
+    <div class="section-title">
+        Inspection Overview
+    </div>
+
+    <div class="kpi-grid">
+
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                Total Detections
+            </div>
+
+            <div
+                class="kpi-value blue"
+                id="totalDetections"
+            >
+                0
+            </div>
+
+            <div class="kpi-sub">
+                AI identified road conditions
+            </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                High Severity
+            </div>
+
+            <div
+                class="kpi-value danger"
+                id="highDetections"
+            >
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Require attention
+            </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                Medium Severity
+            </div>
+
+            <div
+                class="kpi-value warning"
+                id="mediumDetections"
+            >
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Monitor / plan maintenance
+            </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                Critical / High Priority
+            </div>
+
+            <div
+                class="kpi-value danger"
+                id="priorityDetections"
+            >
+                0
+            </div>
+
+            <div class="kpi-sub">
+                Maintenance attention
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     IMAGE UPLOAD
+========================================================= -->
+
+<section class="section">
+
+    <div class="section-title">
+        Road Inspection
+    </div>
+
+    <div class="upload-card">
+
+        <div class="upload-area">
+
+            <input
+                type="file"
+                id="roadImageInput"
+                class="file-input"
+                accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+            >
+
+            <button
+                id="detectImageButton"
+                class="detect-button"
+                type="button"
+                onclick="uploadRoadImage()"
+            >
+                Detect Road Damage
+            </button>
+
+        </div>
+
+        <div id="selectedFile">
+            No image selected
+        </div>
+
+        <div id="uploadStatus"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     EVIDENCE + DECISION
+========================================================= -->
+
+<section class="section">
+
+    <div class="two-column">
+
+
+        <!-- EVIDENCE -->
+
+        <div class="card">
+
+            <div class="card-title">
+                AI Visual Evidence
+            </div>
+
+            <div
+                id="imageContainer"
+                class="image-container"
+            >
+
+                <div class="no-image">
+                    No detection image available.
+                </div>
+
+            </div>
+
+            <div
+                id="evidenceCaption"
+                class="evidence-caption"
+            >
+                Upload a road image to generate visual evidence.
+            </div>
+
+        </div>
+
+
+        <!-- LATEST DECISION -->
+
+        <div class="card">
+
+            <div class="card-title">
+                Latest AI Decision
+            </div>
+
+            <div
+                id="latestDecision"
+            >
+
+                <div class="no-image">
+                    Waiting for detection...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     PRIORITY SUMMARY
+========================================================= -->
+
+<section class="section">
+
+    <div class="card">
+
+        <div class="card-title">
+            Maintenance Priority
+        </div>
+
+        <div class="priority-grid">
+
+
+            <div class="priority-card">
+
+                <div>
+                    P1 — Urgent
+                </div>
+
+                <div
+                    id="p1Count"
+                    class="priority-number danger"
+                >
+                    0
+                </div>
+
+                <small>
+                    Immediate inspection
+                </small>
+
+            </div>
+
+
+            <div class="priority-card">
+
+                <div>
+                    P2 — Planned
+                </div>
+
+                <div
+                    id="p2Count"
+                    class="priority-number warning"
+                >
+                    0
+                </div>
+
+                <small>
+                    Schedule maintenance
+                </small>
+
+            </div>
+
+
+            <div class="priority-card">
+
+                <div>
+                    P3 — Monitor
+                </div>
+
+                <div
+                    id="p3Count"
+                    class="priority-number success"
+                >
+                    0
+                </div>
+
+                <small>
+                    Continue monitoring
+                </small>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     DETECTION TIMELINE
+========================================================= -->
+
+<section class="section">
+
+    <div class="card">
+
+        <div class="card-title">
+            Detection Timeline
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Defect
+                        </th>
+
+                        <th>
+                            Confidence
+                        </th>
+
+                        <th>
+                            Severity
+                        </th>
+
+                        <th>
+                            Persistence
+                        </th>
+
+                        <th>
+                            Deterioration
+                        </th>
+
+                        <th>
+                            Priority
+                        </th>
+
+                        <th>
+                            Segment
+                        </th>
+
+                        <th>
+                            Timestamp
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody
+                    id="timelineBody"
+                >
+
+                    <tr>
+
+                        <td
+                            colspan="9"
+                            style="text-align:center;padding:30px;"
+                        >
+                            Loading detection data...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MAINTENANCE RECOMMENDATION
+========================================================= -->
+
+<section class="section">
+
+    <div class="card">
+
+        <div class="card-title">
+            Recommended Maintenance Action
+        </div>
+
+        <div
+            id="recommendedAction"
+            class="action-box"
+        >
+
+            <div class="action-title">
+                AI RECOMMENDATION
+            </div>
+
+            <div class="action-text">
+                Waiting for detection results...
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+    InfraSight • MonsoonRoad Guardian • AI Road Infrastructure Intelligence
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+let latestDetections = [];
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHTML(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =========================================================
+   CONFIDENCE FORMAT
+========================================================= */
+
+function formatConfidence(value) {
+
+    const number = Number(value || 0);
+
+    /*
+       Backend returns confidence as decimal:
+       0.75 -> 75%
+    */
+
+    const percent = number <= 1
+        ? number * 100
+        : number;
+
+    return percent.toFixed(1) + "%";
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+function badge(value) {
+
+    const text = String(value || "Unknown");
+
+    const lower = text.toLowerCase();
+
+    let cls = "badge-blue";
+
+    if (
+        lower.includes("critical")
+    ) {
+        cls = "badge-critical";
+    }
+
+    else if (
+        lower.includes("high")
+    ) {
+        cls = "badge-high";
+    }
+
+    else if (
+        lower.includes("medium")
+    ) {
+        cls = "badge-medium";
+    }
+
+    else if (
+        lower.includes("low")
+        ||
+        lower.includes("stable")
+        ||
+        lower.includes("new")
+    ) {
+        cls = "badge-low";
+    }
+
+    return `
+        <span class="badge ${cls}">
+            ${escapeHTML(text)}
+        </span>
+    `;
+}
+
+
+/* =========================================================
+   PRIORITY NORMALIZATION
+========================================================= */
+
+function normalizePriority(priority) {
+
+    const value =
+        String(priority || "")
+            .toLowerCase();
+
+    if (
+        value === "critical" ||
+        value === "high" ||
+        value === "p1"
+    ) {
+        return "P1";
+    }
+
+    if (
+        value === "medium" ||
+        value === "p2"
+    ) {
+        return "P2";
+    }
+
+    return "P3";
+}
+
+
+/* =========================================================
+   FILE SELECTION
+========================================================= */
+
+document
+    .getElementById("roadImageInput")
+    .addEventListener(
+        "change",
+        function () {
+
+            const display =
+                document.getElementById(
+                    "selectedFile"
+                );
+
+            if (
+                this.files &&
+                this.files.length > 0
+            ) {
+
+                display.textContent =
+                    "Selected: " +
+                    this.files[0].name;
+
+            }
+
+            else {
+
+                display.textContent =
+                    "No image selected";
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   UPLOAD + DETECTION
+========================================================= */
+
+async function uploadRoadImage() {
+
+    const input =
+        document.getElementById(
+            "roadImageInput"
+        );
+
+    const button =
+        document.getElementById(
+            "detectImageButton"
+        );
+
+    const status =
+        document.getElementById(
+            "uploadStatus"
+        );
+
+
+    if (
+        !input.files ||
+        input.files.length === 0
+    ) {
+
+        status.textContent =
+            "Please select a road image first.";
+
+        status.style.color =
+            "#dc2626";
+
+        return;
+
+    }
+
+
+    const file =
+        input.files[0];
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "AI Detecting...";
+
+
+    status.textContent =
+        "Uploading image and running YOLO...";
+
+    status.style.color =
+        "#2563eb";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/upload-image",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                data.message ||
+                "Detection failed"
+            );
+
+        }
+
+
+        const count =
+            data.detections ??
+            data.detection_count ??
+            data.count ??
+            (
+                Array.isArray(data.results)
+                    ? data.results.length
+                    : 0
+            );
+
+
+        status.textContent =
+            "Detection completed: " +
+            count +
+            " detection(s).";
+
+        status.style.color =
+            "#16a34a";
+
+
+        /*
+           Immediately reload dashboard.
+        */
+
+        await loadDetection();
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Upload error:",
+            error
+        );
+
+
+        status.textContent =
+            "Detection error: " +
+            error.message;
+
+        status.style.color =
+            "#dc2626";
+
+    }
+
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Detect Road Damage";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD DETECTION DATA
+========================================================= */
+
+async function loadDetection() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/timeline?t=" +
+                Date.now()
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Timeline API returned " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        latestDetections =
+            Array.isArray(
+                data.detections
+            )
+                ? data.detections
+                : [];
+
+
+        updateKPIs(
+            latestDetections
+        );
+
+
+        updateEvidence(
+            data,
+            latestDetections
+        );
+
+
+        updateLatestDecision(
+            latestDetections
+        );
+
+
+        updatePriority(
+            latestDetections
+        );
+
+
+        updateTimeline(
+            latestDetections
+        );
+
+
+        updateRecommendation(
+            latestDetections
+        );
+
+
+        document
+            .getElementById(
+                "systemStatus"
+            )
+            .textContent =
+            "AI Engine Online";
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Detection loading error:",
+            error
+        );
+
+
+        document
+            .getElementById(
+                "systemStatus"
+            )
+            .textContent =
+            "Dashboard API Offline";
+
+    }
+
+}
+
+
+/* =========================================================
+   KPI
+========================================================= */
+
+function updateKPIs(
+    detections
+) {
+
+    let high = 0;
+
+    let medium = 0;
+
+    let priority = 0;
+
+
+    detections.forEach(
+        function(item) {
+
+            const severity =
+                String(
+                    item.severity || ""
+                ).toLowerCase();
+
+
+            if (
+                severity === "high" ||
+                severity === "critical"
+            ) {
+
+                high++;
+
+            }
+
+
+            if (
+                severity === "medium"
+            ) {
+
+                medium++;
+
+            }
+
+
+            const p =
+                normalizePriority(
+                    item.priority
+                );
+
+
+            if (
+                p === "P1"
+            ) {
+
+                priority++;
+
+            }
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "totalDetections"
+        )
+        .textContent =
+        detections.length;
+
+
+    document
+        .getElementById(
+            "highDetections"
+        )
+        .textContent =
+        high;
+
+
+    document
+        .getElementById(
+            "mediumDetections"
+        )
+        .textContent =
+        medium;
+
+
+    document
+        .getElementById(
+            "priorityDetections"
+        )
+        .textContent =
+        priority;
+
+}
+
+
+/* =========================================================
+   EVIDENCE IMAGE
+========================================================= */
+
+function updateEvidence(
+    data,
+    detections
+) {
+
+    const container =
+        document.getElementById(
+            "imageContainer"
+        );
+
+    const caption =
+        document.getElementById(
+            "evidenceCaption"
+        );
+
+
+    let imagePath =
+        data.latest_image ||
+        data.detection_image ||
+        data.image ||
+        data.output;
+
+
+    if (
+        !imagePath &&
+        detections.length > 0
+    ) {
+
+        imagePath =
+            detections[0].evidence_path ||
+            detections[0].image;
+
+    }
+
+
+    if (imagePath) {
+
+        container.innerHTML = "";
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+
+        image.src =
+            imagePath +
+            "?t=" +
+            Date.now();
+
+
+        image.className =
+            "detection-image";
+
+
+        image.alt =
+            "AI road damage detection evidence";
+
+
+        container.appendChild(
+            image
+        );
+
+
+        caption.textContent =
+            "AI-generated visual evidence with detected road damage highlighted.";
+
+    }
+
+    else {
+
+        container.innerHTML = `
+            <div class="no-image">
+                No detection image available.
+            </div>
+        `;
+
+        caption.textContent =
+            "Upload a road image to generate visual evidence.";
+
+    }
+
+}
+
+
+/* =========================================================
+   LATEST DECISION
+========================================================= */
+
+function updateLatestDecision(
+    detections
+) {
+
+    const container =
+        document.getElementById(
+            "latestDecision"
+        );
+
+
+    if (
+        detections.length === 0
+    ) {
+
+        container.innerHTML = `
+            <div class="no-image">
+                No road damage detected.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    const item =
+        detections[0];
+
+
+    const confidence =
+        formatConfidence(
+            item.confidence
+        );
+
+
+    container.innerHTML = `
+
+        <div class="decision-header">
+
+            <strong>
+                Detection #${escapeHTML(item.detection_id)}
+            </strong>
+
+            ${badge(item.defect_class)}
+
+        </div>
+
+
+        <div class="decision-row">
+
+            <span class="decision-label">
+                Defect Class
+            </span>
+
+            <span class="decision-value">
+                ${escapeHTML(item.defect_class || "Unknown")}
+            </span>
+
+        </div>
+
+
+        <div class="decision-row">
+
+            <span class="decision-label">
+                AI Confidence
+            </span>
+
+            <span class="decision-value">
+                ${confidence}
+            </span>
+
+        </div>
+
+
+        <div class="decision-row">
+
+            <span class="decision-label">
+                Severity
+            </span>
+
+            <span class="decision-value">
+                ${badge(item.severity)}
+            </span>
+
+        </div>
+
+
+        <div class="decision-row">
+
+            <span class="decision-label">
+                Persistence
+            </span>
+
+            <span class="decision-value">
+                ${badge(item.persistence)}
+            </span>
+
+        </div>
+
+
+        <div class="decision-row">
+
+            <span class="decision-label">
+                Deterioration
+            </span>
+
+            <span class="decision-value">
+                ${badge(item.deterioration)}
+            </span>
+
+        </div>
+
+
+        <div class="decision-row">
+
+            <span class="decision-label">
+                Priority
+            </span>
+
+            <span class="decision-value">
+                ${badge(item.priority)}
+            </span>
+
+        </div>
+
+
+        <div class="decision-row">
+
+            <span class="decision-label">
+                Segment
+            </span>
+
+            <span class="decision-value">
+                ${escapeHTML(item.segment_id || "N/A")}
+            </span>
+
+        </div>
+
+
+        <div class="decision-row">
+
+            <span class="decision-label">
+                Timestamp
+            </span>
+
+            <span class="decision-value">
+                ${escapeHTML(item.timestamp || "N/A")}
+            </span>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   PRIORITY
+========================================================= */
+
+function updatePriority(
+    detections
+) {
+
+    let p1 = 0;
+
+    let p2 = 0;
+
+    let p3 = 0;
+
+
+    detections.forEach(
+        function(item) {
+
+            const priority =
+                normalizePriority(
+                    item.priority
+                );
+
+
+            if (
+                priority === "P1"
+            ) {
+
+                p1++;
+
+            }
+
+            else if (
+                priority === "P2"
+            ) {
+
+                p2++;
+
+            }
+
+            else {
+
+                p3++;
+
+            }
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "p1Count"
+        )
+        .textContent =
+        p1;
+
+
+    document
+        .getElementById(
+            "p2Count"
+        )
+        .textContent =
+        p2;
+
+
+    document
+        .getElementById(
+            "p3Count"
+        )
+        .textContent =
+        p3;
+
+}
+
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+function updateTimeline(
+    detections
+) {
+
+    const body =
+        document.getElementById(
+            "timelineBody"
+        );
+
+
+    if (
+        detections.length === 0
+    ) {
+
+        body.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="9"
+                    style="
+                        text-align:center;
+                        padding:30px;
+                    "
+                >
+
+                    No road damage detected.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    body.innerHTML =
+        detections
+            .map(
+                function(item) {
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${escapeHTML(
+                                    item.detection_id
+                                )}
+                            </td>
+
+
+                            <td>
+                                <strong>
+                                    ${escapeHTML(
+                                        item.defect_class ||
+                                        "Unknown"
+                                    )}
+                                </strong>
+                            </td>
+
+
+                            <td>
+                                ${formatConfidence(
+                                    item.confidence
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${badge(
+                                    item.severity
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${badge(
+                                    item.persistence
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${badge(
+                                    item.deterioration
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${badge(
+                                    item.priority
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${escapeHTML(
+                                    item.segment_id ||
+                                    "N/A"
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${escapeHTML(
+                                    item.timestamp ||
+                                    "N/A"
+                                )}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   RECOMMENDATION
+========================================================= */
+
+function updateRecommendation(
+    detections
+) {
+
+    const container =
+        document.getElementById(
+            "recommendedAction"
+        );
+
+
+    if (
+        detections.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="action-title">
+                AI RECOMMENDATION
+            </div>
+
+            <div class="action-text">
+                No maintenance action required based on current detections.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /*
+       Find highest-priority detection.
+    */
+
+    const ranked =
+        [...detections]
+            .sort(
+                function(a, b) {
+
+                    const order = {
+                        "critical": 4,
+                        "high": 3,
+                        "medium": 2,
+                        "low": 1
+                    };
+
+                    const pa =
+                        order[
+                            String(
+                                a.priority || ""
+                            ).toLowerCase()
+                        ] || 0;
+
+                    const pb =
+                        order[
+                            String(
+                                b.priority || ""
+                            ).toLowerCase()
+                        ] || 0;
+
+                    return pb - pa;
+
+                }
+            );
+
+
+    const item =
+        ranked[0];
+
+
+    const action =
+        item.recommended_action ||
+        "Inspect road segment and plan maintenance.";
+
+
+    container.innerHTML = `
+
+        <div class="action-title">
+            AI RECOMMENDATION
+        </div>
+
+        <div class="action-text">
+            ${escapeHTML(action)}
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   DASHBOARD LOAD
+========================================================= */
+
+async function loadDashboard() {
+
+    await loadDetection();
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+loadDashboard();
+
+
+/* =========================================================
+   AUTO REFRESH
+========================================================= */
+
+setInterval(
+    loadDashboard,
+    5000
+);
+
+</script>
+
+
+</body>
+</html>

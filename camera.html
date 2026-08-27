@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>InfraSight | Live Camera</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #050912;
+
+            color: white;
+
+            min-height: 100vh;
+        }
+
+        header {
+
+            background: #ffffff;
+
+            color: #10203a;
+
+            padding: 18px 3%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+        }
+
+        .logo {
+
+            width: 52px;
+
+            height: 52px;
+
+            border-radius: 14px;
+
+            background: #2864e8;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: bold;
+
+            font-size: 22px;
+        }
+
+        .brand h1 {
+
+            margin: 0 0 3px;
+
+            font-size: 24px;
+        }
+
+        .brand p {
+
+            margin: 0;
+
+            color: #67809d;
+        }
+
+        .camera-section {
+
+            width: 90%;
+
+            max-width: 1100px;
+
+            margin: 35px auto;
+
+            text-align: center;
+        }
+
+        .camera-box {
+
+            background: black;
+
+            border: 3px solid #1a2940;
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            min-height: 500px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        video {
+
+            width: 100%;
+
+            max-height: 650px;
+
+            object-fit: contain;
+
+            display: block;
+        }
+
+        canvas {
+
+            display: none;
+        }
+
+        .status {
+
+            margin: 20px;
+
+            font-size: 19px;
+
+            color: #8ea5c3;
+        }
+
+        .buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+        }
+
+        button {
+
+            border: none;
+
+            padding: 14px 25px;
+
+            border-radius: 9px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .start {
+
+            background: #087f3d;
+
+            color: white;
+        }
+
+        .detect {
+
+            background: #2864e8;
+
+            color: white;
+        }
+
+        .back {
+
+            background: #263345;
+
+            color: white;
+        }
+
+        #result {
+
+            margin-top: 20px;
+
+            font-size: 18px;
+
+            min-height: 30px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="brand">
+
+        <div class="logo">
+            IS
+        </div>
+
+        <div>
+
+            <h1>InfraSight</h1>
+
+            <p>
+                AI-Powered Road Infrastructure Monitoring
+            </p>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<section class="camera-section">
+
+    <div class="camera-box">
+
+        <video
+            id="video"
+            autoplay
+            playsinline
+        ></video>
+
+    </div>
+
+
+    <canvas id="canvas"></canvas>
+
+
+    <div
+        class="status"
+        id="status"
+    >
+        📷 Camera not started
+    </div>
+
+
+    <div class="buttons">
+
+        <button
+            class="start"
+            onclick="startCamera()"
+        >
+            📷 Start Camera
+        </button>
+
+
+        <button
+            class="detect"
+            onclick="detectFrame()"
+        >
+            🔍 Detect Road Damage
+        </button>
+
+
+        <button
+            class="back"
+            onclick="
+                window.location.href='/dashboard/'
+            "
+        >
+            ← Dashboard
+        </button>
+
+    </div>
+
+
+    <div id="result"></div>
+
+</section>
+
+
+<script>
+
+let stream = null;
+
+
+/* ============================================================
+   START CAMERA
+   ============================================================ */
+
+async function startCamera() {
+
+    const video =
+        document.getElementById(
+            "video"
+        );
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    try {
+
+        stream =
+            await navigator.mediaDevices.getUserMedia({
+
+                video: {
+                    facingMode: "environment"
+                },
+
+                audio: false
+
+            });
+
+
+        video.srcObject =
+            stream;
+
+
+        status.textContent =
+            "🟢 Camera active";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        status.textContent =
+            "❌ Camera access failed: " +
+            error.message;
+    }
+}
+
+
+/* ============================================================
+   DETECT FRAME
+   ============================================================ */
+
+async function detectFrame() {
+
+    const video =
+        document.getElementById(
+            "video"
+        );
+
+    const canvas =
+        document.getElementById(
+            "canvas"
+        );
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+    const result =
+        document.getElementById(
+            "result"
+        );
+
+
+    if (
+        !stream ||
+        video.readyState < 2
+    ) {
+
+        alert(
+            "Please start the camera first."
+        );
+
+        return;
+    }
+
+
+    status.textContent =
+        "⏳ AI is analyzing the frame...";
+
+
+    canvas.width =
+        video.videoWidth;
+
+
+    canvas.height =
+        video.videoHeight;
+
+
+    const context =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    canvas.toBlob(
+        async function(blob) {
+
+            if (!blob) {
+
+                status.textContent =
+                    "❌ Could not capture frame.";
+
+                return;
+            }
+
+
+            const formData = new FormData();
+
+formData.append(
+    "file",
+    blob,
+    "camera_frame.jpg"
+);
+
+formData.append(
+    "segment_id",
+    "demo_segment_001"
+);
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/detect-frame",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "CAMERA RESPONSE:",
+                    data
+                );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        data.detail ||
+                        "Detection failed"
+                    );
+                }
+
+
+                if (
+                    data.detections > 0
+                ) {
+
+                    status.textContent =
+                        "🚨 Road damage detected";
+
+                    result.innerHTML = `
+                        <strong>
+                            ${data.detections}
+                            detection(s) recorded.
+                        </strong>
+                    `;
+
+                }
+
+                else {
+
+                    status.textContent =
+                        "✅ No road damage detected";
+
+                    result.innerHTML = `
+                        No road damage detected
+                        in this frame.
+                    `;
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+                status.textContent =
+                    "❌ YOLO detection failed.";
+
+                result.textContent =
+                    error.message;
+            }
+
+        },
+        "image/jpeg",
+        0.9
+    );
+}
+
+</script>
+
+
+</body>
+
+</html>
