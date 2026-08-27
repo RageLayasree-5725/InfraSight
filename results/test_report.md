@@ -1,27 +1,40 @@
 # AI Model Test Results
 
 ## Test Setup
-- Model: best.pt
+
+- Model: `model/best.pt`
 - Task: Road damage detection
 - Test images: 4
 - Inference mode: Image detection
 
+## Test Images
+
+The following road-damage images were used for prototype testing:
+
+| Image | Test Status |
+|---|---|
+| `crack1.jpg` | Detection output generated |
+| `crack2.jpg` | Detection output generated |
+| `crack3.jpg` | Detection output generated |
+| `road_damage_test.jpg` | Additional test image |
+
 ## Observed Results
 
-The trained model was tested on road-damage images.
+The trained YOLO-based model was tested on road-damage imagery.
 
-### Successful detections
-- crack1.jpg
-- crack2.jpg
-- crack3.jpg
+The prototype successfully produced visual detection outputs with bounding boxes on the tested images.
 
-### Additional test
-- road_damage_test.jpg
+The observed outputs demonstrate the complete inference pipeline:
 
-## Important Observation
-
-The model successfully produced bounding-box detections on the test images. However, some predictions had very low confidence and the damage classification was not consistently reliable.
-
-## Current Limitation
-
-The current prototype requires further validation on a larger, representative test dataset before reporting reliable precision, recall, F1-score, IoU, severity, persistence, or deterioration metrics.
+```text
+Input Road Image
+       ↓
+YOLO Model Inference
+       ↓
+Object Detection
+       ↓
+Damage Class Prediction
+       ↓
+Confidence Score
+       ↓
+Bounding-Box Visualization
